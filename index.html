@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Калькулятор инфляции онлайн — Расчет обесценивания денег</title>
+<meta name="description" content="Бесплатный калькулятор инфляции онлайн. Узнайте реальную покупательную способность денег и индекс цен с 2000 по 2026 год мгновенно в браузере.">
+<style>
+:root{--primary:#2563eb;--primary-hover:#1d4ed8;--success:#16a34a;--bg:#f8fafc;--card-bg:#ffffff;--text:#0f172a;--text-muted:#64748b;--border:#e2e8f0}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{background:var(--bg);color:var(--text);padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.wrapper{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:440px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05)}
+h1{font-size:22px;font-weight:700;margin-bottom:8px;text-align:center}
+.subtitle{font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:20px}
+.group{margin-bottom:14px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text)}
+select,input{width:100%;padding:11px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:#fff;color:var(--text);transition:border 0.2s}
+select:focus,input:focus{border-color:var(--primary);outline:none}
+.row-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-btn{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px;box-shadow:0 4px 6px -1px rgba(37,99,235,0.2);transition:background 0.2s}
+.calc-btn:hover{background:var(--primary-hover)}
+.results{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:20px;display:none}
+.res-row{display:flex;justify-content:space-between;padding:8px 0;font-size:15px;border-bottom:1px dashed var(--border)}
+.res-row:last-child{border-bottom:none}
+.res-val{font-weight:700;color:var(--primary)}
+.res-val.loss{color:#dc2626}
+.ad{display:none;margin-top:15px;min-height:90px;text-align:center;justify-content:center;align-items:center;width:100%}
+.seo-text{font-size:12px;color:var(--text-muted);margin-top:24px;text-align:justify;line-height:1.4;border-top:1px solid var(--border);padding-top:16px;display:none}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<h1>Калькулятор инфляции</h1>
+<div class="subtitle">Покупательная способность и обесценивание валюты</div>
+<div class="group">
+<label for="amount">Сумма денег</label>
+<input type="number" id="amount" value="1000" min="1" inputmode="numeric">
+</div>
+<div class="row-grid">
+<div class="group">
+<label for="start-year">Начальный год</label>
+<select id="start-year"></select>
+</div>
+<div class="group">
+<label for="end-year">Конечный год</label>
+<select id="end-year"></select>
+</div>
+</div>
+<button class="calc-btn" onclick="calculateInflation()">Рассчитать</button>
+<div class="results" id="results-box">
+<div class="res-row"><span>Эквивалентная сумма:</span><span class="res-val" id="res-sum">0.00</span></div>
+<div class="res-row"><span>Общая инфляция:</span><span class="res-val" id="res-rate">0.0%</span></div>
+<div class="res-row"><span>Потеря ценности:</span><span class="res-val loss" id="res-loss">0.0%</span></div>
+</div>
+<div id="ads" class="ad"><div id="container-e8c895e6c70ade8e4ef4a72354f42e97"></div></div>
+<div class="seo-text" id="seo-box">
+Наш интерактивный калькулятор инфляции онлайн спроектирован для мгновенного анализа изменения реальной стоимости капитала. Математический алгоритм сопоставляет введенную сумму с накопленным индексом потребительских цен за выбранный период времени. Локальный скрипт рассчитывает реальный уровень обесценивания денег и падение покупательной способности без отправки ваших личных финансовых данных на внешние сервера.
+</div>
+</div>
+<script>
+const inflationData={
+2000:20.2,2001:18.6,2002:15.1,2003:12.0,2004:11.7,2005:10.9,2006:9.0,2007:11.9,2008:13.3,2009:8.8,
+2010:8.8,2011:6.1,2012:6.6,2013:6.5,2014:11.4,2015:12.9,2016:5.4,2017:2.5,2018:4.3,2019:3.0,
+2020:4.9,2021:8.4,2022:11.9,2023:7.4,2024:8.6,2025:7.5,2026:6.8
+};
+const startSelect=document.getElementById('start-year'),endSelect=document.getElementById('end-year');
+for(let y=2000;y<=2026;y++){
+let o1=document.createElement('option'),o2=document.createElement('option');
+o1.value=y;o1.innerText=y;o2.value=y;o2.innerText=y;
+startSelect.appendChild(o1);endSelect.appendChild(o2);
+}
+startSelect.value=2000;endSelect.value=2026;
+function showAds(){
+const c=document.getElementById('ads');
+if(!window.adScriptLoaded){
+window.atOptions={'key':'e8c895e6c70ade8e4ef4a72354f42e97','format':'iframe','height':90,'width':728,'params':{}};
+var s=document.createElement('script');s.type='text/javascript';s.async=!0;
+s.src=['https://','bagelstoppage.','com/','e8c895e6c70ade8e4ef4a72354f42e97/','invoke.js'].join('');c.appendChild(s);window.adScriptLoaded=!0
+}c.style.display='flex'}
+function calculateInflation(){
+const amt=parseFloat(document.getElementById('amount').value),sYear=parseInt(startSelect.value),eYear=parseInt(endSelect.value);
+if(isNaN(amt)||amt<=0){alert('Пожалуйста, введите корректную сумму.');return}
+if(sYear>eYear){alert('Начальный год не может быть больше конечного.');return}
+let cumMultiplier=1.0;
+for(let y=sYear+1;y<=eYear;y++){cumMultiplier*=(1+(inflationData[y]/100))}
+const targetSum=amt*cumMultiplier,totalRate=(cumMultiplier-1)*100,lossPower=(1-(1/cumMultiplier))*100;
+document.getElementById('res-sum').innerText=targetSum.toFixed(2);
+document.getElementById('res-rate').innerText=totalRate.toFixed(1)+'%';
+document.getElementById('res-loss').innerText=lossPower.toFixed(1)+'%';
+document.getElementById('results-box').style.display='block';
+document.getElementById('seo-box').style.display='block';
+showAds();
+}
+</script>
+</body>
+</html>
